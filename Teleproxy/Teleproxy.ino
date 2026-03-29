@@ -51,17 +51,15 @@ void setup()
 	SIM::RegStatus regStatus;
 
 	auto s = modem.waitForNetworkRegistration(regStatus);
-	FormatInvoke("Registration: %d", Serial.println, SIM::statusToString(s));
 
-	// auto apn = modem.configureAPN("wholesale");
-	// SerialMon.println(SIM::statusToString(apn));
+	FmtInvoke("Reg: %s", Serial.println, SIM::statusToString(s));
 
 	// modem.sendATCmd("CNAME");
 	auto h = modem.startHttpService();
-	FormatInvoke("HTTP init: %d", Serial.println, SIM::statusToString(h));
+	FmtInvoke("HTTP svc: %s", Serial.println, SIM::statusToString(h));
 
 	auto cn = http.connect();
-	FormatInvoke("HTTP: %d", Serial.println, SIM::statusToString(cn));
+	FmtInvoke("Http connect: %s", Serial.println, SIM::statusToString(cn));
 
 	http.disconnect();
 	modem.stopHttpService();
