@@ -6,7 +6,7 @@
 
 // ReSharper disable CppClangTidyModernizeMacroToEnum
 // ReSharper disable CppInconsistentNaming
-#include "SIM7600HttpClient.h"
+
 #include <Arduino.h>
 #include <IPAddress.h>
 #include <string.h>
@@ -21,19 +21,19 @@
 #define SIM7600_LOG_LEVEL 5  // Enable all logs including AT commands
 
 #include <SIM7600Modem.h>
-#include "SIM7600TCPClient.h"   // TCP client functionality
+#include "SIM7600HttpClient.h"
 
 namespace SIM = SIM7600;
 
-SIM::Modem     modem(&SerialAT);
-SIM::TCPClient tcp(&modem);
+SIM::Modem      modem(&SerialAT);
+SIM::HttpClient http(&modem);
 
 
 void setup()
 {
 	SerialMon.begin(115200);
 	SerialAT.begin(115200, SERIAL_8N1);
-	
+
 	pinMode(PIN2, OUTPUT); // Power control pin
 	digitalWrite(PIN2, HIGH); // Power on the module
 
@@ -47,24 +47,24 @@ void setup()
 		delay(5000);
 	}
 
-	SerialMon.println("Initialized modem");
+	SerialMon.println(F("Initialized modem"));
 	SIM::RegStatus regStatus;
 
 	auto s = modem.waitForNetworkRegistration(regStatus);
-	SerialMon.println(SIM::statusToString(s));
-	SerialMon.println(static_cast<uint8_t>(regStatus));
-
-	modem.startTCPIPService();
+	FormatInvoke("Registration: %d", Serial.println, SIM::statusToString(s));
 
 	// auto apn = modem.configureAPN("wholesale");
 	// SerialMon.println(SIM::statusToString(apn));
 
 	// modem.sendATCmd("CNAME");
-	auto cn = tcp.connect("www.google.com", 80);
-	SerialMon.println(cn);
-	SerialMon.println(tcp.available());
-	tcp.disconnect();
-	modem.stopTCPIPService();
+	auto h = modem.startHttpService();
+	FormatInvoke("HTTP init: %d", Serial.println, SIM::statusToString(h));
+
+	auto cn = http.connect();
+	FormatInvoke("HTTP: %d", Serial.println, SIM::statusToString(cn));
+
+	http.disconnect();
+	modem.stopHttpService();
 	modem.powerOff();
 }
 
