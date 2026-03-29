@@ -4,7 +4,9 @@
  Author:	Deci
 */
 
-// the setup function runs once when you press reset or power the board
+// ReSharper disable CppClangTidyModernizeMacroToEnum
+// ReSharper disable CppInconsistentNaming
+#include "SIM7600HttpClient.h"
 #include <Arduino.h>
 #include <IPAddress.h>
 #include <string.h>
@@ -21,24 +23,11 @@
 #include <SIM7600Modem.h>
 #include "SIM7600TCPClient.h"   // TCP client functionality
 
-// ReSharper disable CppInconsistentNaming
-
 namespace SIM = SIM7600;
 
 SIM::Modem     modem(&SerialAT);
 SIM::TCPClient tcp(&modem);
 
-// Modem ready event callback
-void modemReadyCB() { Serial.println("Event: Modem is ready!"); }
-
-// Network changed event callback
-void networkChangedCB(const bool registered, const SIM::RegStatus reg_status)
-{
-	char buf[256];
-	sprintf(buf, "Event: Network changed! Registered: %s, Status: %u",
-	        registered ? "Yes" : "No", static_cast<uint8_t>(reg_status));
-	Serial.println(buf);
-}
 
 void setup()
 {
