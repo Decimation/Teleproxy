@@ -34,8 +34,8 @@ void setup()
 	SerialMon.begin(115200);
 	SerialAT.begin(115200, SERIAL_8N1);
 
-	pinMode(PIN2, OUTPUT); // Power control pin
-	digitalWrite(PIN2, HIGH); // Power on the module
+	pinMode(PIN2, OUTPUT);
+	digitalWrite(PIN2, HIGH);
 
 	while (true) {
 		auto status = modem.init();
@@ -52,14 +52,16 @@ void setup()
 
 	auto s = modem.waitForNetworkRegistration(regStatus);
 
-	FmtInvoke("Reg: %s", Serial.println, SIM::statusToString(s));
+	FormatInvokeF2("Reg: %s", ln, SIM::statusToString(s));
 
-	// modem.sendATCmd("CNAME");
 	auto h = modem.startHttpService();
-	FmtInvoke("HTTP svc: %s", Serial.println, SIM::statusToString(h));
+	FormatInvokeF2("HTTP svc: %s", ln, SIM::statusToString(h));
 
 	auto cn = http.connect();
-	FmtInvoke("Http connect: %s", Serial.println, SIM::statusToString(cn));
+	FormatInvokeF2("Http connect: %s", ln, SIM::statusToString(cn));
+
+	auto addPara = http.addPara(SIM7600::HttpPara::URL, PSTR("http://www.google.com"));
+	FormatInvokeF2("Http add para: %s", ln, SIM::statusToString(addPara));
 
 	http.disconnect();
 	modem.stopHttpService();

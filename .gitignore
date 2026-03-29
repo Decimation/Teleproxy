@@ -361,5 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Teleproxy/__vm/
 /Teleproxy/__vm/Compile.vmps.xml
 /Teleproxy/__vm/Upload.vmps.xml

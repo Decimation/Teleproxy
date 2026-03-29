@@ -8,6 +8,7 @@
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
   </Folder>
+  <Project Path="../../Documents/Arduino/libraries/ArxContainer/ArxContainer-0.7.0.vcxitems" Id="402cef81-3dd6-40a8-86ee-2568246aaf24" />
   <Project Path="../../Documents/Arduino/libraries/SIM7600Module/SIM7600Module-1.2.0.vcxitems" Id="f7226c8a-68b4-484f-9bc9-9f1b0a5b86bd" />
   <Project Path="Teleproxy/Teleproxy.vcxproj" Id="3297c62a-f066-40ae-940e-975f232755bd">
     <Platform Solution="*|x86" Project="x86" />
