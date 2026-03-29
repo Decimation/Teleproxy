@@ -8,20 +8,19 @@
 // ReSharper disable CppInconsistentNaming
 
 #include <Arduino.h>
-#include <IPAddress.h>
-#include <string.h>
-#include <WString.h>
 
 #define SerialAT Serial1
 #define SerialMon Serial
 
 #define SIM7600_MODEM_TX_BUFFER_SIZE_B 512
 #define SIM7600_MODEM_RX_BUFFER_SIZE_B 512
-
+#define SIM7600_LOG_VERBOSE_ERROR_CODES
+#define SIM7600_LOG_STREAM SerialMon
 #define SIM7600_LOG_LEVEL 5  // Enable all logs including AT commands
 
 #include <SIM7600Modem.h>
 #include "SIM7600HttpClient.h"
+
 
 namespace SIM = SIM7600;
 
@@ -31,6 +30,8 @@ SIM::HttpClient http(&modem);
 
 void setup()
 {
+	using std::size_t;
+
 	SerialMon.begin(115200);
 	SerialAT.begin(115200, SERIAL_8N1);
 
@@ -52,16 +53,22 @@ void setup()
 
 	auto s = modem.waitForNetworkRegistration(regStatus);
 
-	FormatInvokeF2("Reg: %s", ln, SIM::statusToString(s));
-
+	FormatInvoke("Reg: %s", SIM::statusToString(s));
+		
 	auto h = modem.startHttpService();
-	FormatInvokeF2("HTTP svc: %s", ln, SIM::statusToString(h));
+	FormatInvoke("HTTP svc: %s", SIM::statusToString(h));
 
 	auto cn = http.connect();
-	FormatInvokeF2("Http connect: %s", ln, SIM::statusToString(cn));
+	FormatInvoke("Http connect: %s", SIM::statusToString(cn));
 
-	auto addPara = http.addPara(SIM7600::HttpPara::URL, PSTR("http://www.google.com"));
-	FormatInvokeF2("Http add para: %s", ln, SIM::statusToString(addPara));
+	auto addPara = http.addPara(SIM7600::HttpParameter::URL, PSTR("http://www.google.com"));
+	FormatInvoke("Http add para: %s", SIM::statusToString(addPara));
+
+	uint8_t buf1[4096];
+	size_t  outSize;
+
+	auto rhRes = http.readHead(buf1, &outSize);
+	FormatInvoke("Http head: %s", SIM::statusToString(rhRes));
 
 	http.disconnect();
 	modem.stopHttpService();
@@ -70,5 +77,5 @@ void setup()
 
 void loop()
 {
-	// modem.loop();
+	modem.loop();
 }

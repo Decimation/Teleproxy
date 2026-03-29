@@ -102,14 +102,14 @@
     <DebuggerFlavor>VisualMicroDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)..\..\..\Documents\Arduino\libraries\SIM7600Module\src;$(ProjectDir)..\..\..\Documents\Arduino\libraries\ArxContainer;$(ProjectDir)..\..\..\AppData\Local\arduino15\packages\arduino\hardware\avr\1.8.6\cores\arduino;$(ProjectDir)..\..\..\AppData\Local\arduino15\packages\arduino\hardware\avr\1.8.6\variants\mega;$(ProjectDir)..\..\..\appdata\local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\lib\gcc\avr\7.3.0\include;$(ProjectDir)..\..\..\appdata\local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\lib\gcc\avr\7.3.0\include-fixed;$(ProjectDir)..\..\..\appdata\local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\avr\include;$(ProjectDir)..\..\..\Documents\Arduino\libraries\SIM7600Module\src;$(ProjectDir)..\..\..\Documents\Arduino\libraries\ArxContainer</IncludePath>
+    <IncludePath>$(ProjectDir)..\Teleproxy;$(ProjectDir)..\..\..\Documents\Arduino\libraries\SIM7600Module\src;$(ProjectDir)..\..\..\Documents\Arduino\libraries\ArxContainer;$(ProjectDir)..\..\..\AppData\Local\arduino15\packages\arduino\hardware\avr\1.8.6\cores\arduino;$(ProjectDir)..\..\..\AppData\Local\arduino15\packages\arduino\hardware\avr\1.8.6\variants\mega;$(ProjectDir)..\..\..\appdata\local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\lib\gcc\avr\7.3.0\include;$(ProjectDir)..\..\..\appdata\local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\lib\gcc\avr\7.3.0\include-fixed;$(ProjectDir)..\..\..\appdata\local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\avr\include;$(ProjectDir)..\..\..\Documents\Arduino\libraries\SIM7600Module\src;$(ProjectDir)..\..\..\Documents\Arduino\libraries\ArxContainer</IncludePath>
     <RemoteCCompileToolExe>$(ProjectDir)..\..\..\AppData\Local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\bin\avr-g++</RemoteCCompileToolExe>
     <RemoteCppCompileToolExe>$(ProjectDir)..\..\..\AppData\Local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\bin\avr-g++</RemoteCppCompileToolExe>
     <ValidateArchitecture>false</ValidateArchitecture>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\Documents\Arduino\libraries\SIM7600Module\src;$(ProjectDir)..\..\..\Documents\Arduino\libraries\ArxContainer;$(ProjectDir)..\..\..\AppData\Local\arduino15\packages\arduino\hardware\avr\1.8.6\cores\arduino;$(ProjectDir)..\..\..\AppData\Local\arduino15\packages\arduino\hardware\avr\1.8.6\variants\mega;$(ProjectDir)..\..\..\appdata\local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\lib\gcc\avr\7.3.0\include;$(ProjectDir)..\..\..\appdata\local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\lib\gcc\avr\7.3.0\include-fixed;$(ProjectDir)..\..\..\appdata\local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\avr\include;$(ProjectDir)..\..\..\Documents\Arduino\libraries\SIM7600Module\src;$(ProjectDir)..\..\..\Documents\Arduino\libraries\ArxContainer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\Teleproxy;$(ProjectDir)..\..\..\Documents\Arduino\libraries\SIM7600Module\src;$(ProjectDir)..\..\..\Documents\Arduino\libraries\ArxContainer;$(ProjectDir)..\..\..\AppData\Local\arduino15\packages\arduino\hardware\avr\1.8.6\cores\arduino;$(ProjectDir)..\..\..\AppData\Local\arduino15\packages\arduino\hardware\avr\1.8.6\variants\mega;$(ProjectDir)..\..\..\appdata\local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\lib\gcc\avr\7.3.0\include;$(ProjectDir)..\..\..\appdata\local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\lib\gcc\avr\7.3.0\include-fixed;$(ProjectDir)..\..\..\appdata\local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\avr\include;$(ProjectDir)..\..\..\Documents\Arduino\libraries\SIM7600Module\src;$(ProjectDir)..\..\..\Documents\Arduino\libraries\ArxContainer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <GccToolChain>$(ProjectDir)..\..\..\AppData\Local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\bin\avr-g++</GccToolChain>
       <CppLanguageStandard>gnu++11</CppLanguageStandard>
       <CLanguageStandard>gnu11</CLanguageStandard>
@@ -125,7 +125,7 @@
   <ImportGroup Label="ExtensionTargets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties arduino.build.skip_library_file_if_exists_in_project="0" arduino.upload.port="COM11" config.Debug.customdebug_mega_atmega2560_debugger_type="universal" debug.view.DigitalPins="1" />
+      <UserProperties arduino.build.skip_library_file_if_exists_in_project="0" arduino.upload.port="COM11" config.Debug.customdebug_mega_atmega2560_debugger_type="toolchain" debug.view.DigitalPins="1" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
