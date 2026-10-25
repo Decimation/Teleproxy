@@ -12,6 +12,10 @@
   <Project Path="../../Documents/Arduino/libraries/SIM7600Module/SIM7600Module-1.2.0.vcxitems" Id="f7226c8a-68b4-484f-9bc9-9f1b0a5b86bd" />
   <Project Path="Teleproxy/Teleproxy.vcxproj" Id="3297c62a-f066-40ae-940e-975f232755bd">
     <Platform Solution="*|x86" Project="x86" />
-    <Deploy />
+    <Build Solution="Debug|x64" Project="false" />
+    <Deploy Solution="*|ARM" />
+    <Deploy Solution="*|ARM64" />
+    <Deploy Solution="*|x86" />
+    <Deploy Solution="Release|x64" />
   </Project>
 </Solution>

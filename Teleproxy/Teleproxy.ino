@@ -12,67 +12,86 @@
 #define SerialAT Serial1
 #define SerialMon Serial
 
-#define SIM7600_MODEM_TX_BUFFER_SIZE_B 512
-#define SIM7600_MODEM_RX_BUFFER_SIZE_B 512
+#define SIM7600_LOG_LEVEL 5  // Enable all logs including AT commands
+// #define SIM7600_MODEM_TX_BUFFER_SIZE_B 512
+// #define SIM7600_MODEM_RX_BUFFER_SIZE_B 512
 #define SIM7600_LOG_VERBOSE_ERROR_CODES
 #define SIM7600_LOG_STREAM SerialMon
-#define SIM7600_LOG_LEVEL 5  // Enable all logs including AT commands
 
-#include <SIM7600Modem.h>
+#include "SIM7600Modem.h"
 #include "SIM7600HttpClient.h"
-
 
 namespace SIM = SIM7600;
 
-SIM::Modem      modem(&SerialAT);
-SIM::HttpClient http(&modem);
+SIM::Modem modem{&SerialAT};
 
+// SIM::HttpClient http{&modem};
+void modemReadyCB()
+{
+	SerialMon.println("Event: Modem is ready!");
+}
+
+void networkChangedCB(const bool registered, const SIM7600::RegStatus reg_status)
+{
+	auto regStr = registered ? "Yes" : "No";
+	auto regInt = static_cast<uint8_t>(reg_status);
+	Serial.print("Event: Network changed! Registered: Status:");
+	SerialMon.print(regStr);
+	SerialMon.print(' ');
+	SerialMon.println(regInt);
+}
 
 void setup()
 {
-	using std::size_t;
+	// using std::size_t;
+
+	delay(2000);
 
 	SerialMon.begin(115200);
 	SerialAT.begin(115200, SERIAL_8N1);
 
+	// modem.setModemReadyCallback(modemReadyCB);
+	// modem.setNetworkChangedCallback(networkChangedCB);
+
 	pinMode(PIN2, OUTPUT);
 	digitalWrite(PIN2, HIGH);
 
-	while (true) {
-		auto status = modem.init();
-		if (status == SIM::Status::Success) {
-			break;
-		}
+	delay(2000);
 
-		SerialMon.println(SIM::statusToString(status));
-		delay(5000);
+	while (true) {
+		SerialMon.println("Initializing modem...");
+		SIM7600::Status status = modem.init();
+
+		if (status == SIM7600::Status::Success) {
+			SerialMon.println("Modem initialized successfully!");
+			break;
+		} else {
+			SerialMon.print("Modem initialization failed: ");
+			SerialMon.println((int) SIM7600::statusToString(status));
+			SerialMon.println("Retrying in 5 seconds...");
+			delay(5000);
+		}
 	}
 
-	SerialMon.println(F("Initialized modem"));
-	SIM::RegStatus regStatus;
+	SerialMon.println("Done");
 
-	auto s = modem.waitForNetworkRegistration(regStatus);
+	// modem.stopHttpService();
 
-	FormatInvoke("Reg: %s", SIM::statusToString(s));
-		
-	auto h = modem.startHttpService();
-	FormatInvoke("HTTP svc: %s", SIM::statusToString(h));
+	SIM::RegStatus  reg   = {};
+	SIM7600::Status wfNet = {};
 
-	auto cn = http.connect();
-	FormatInvoke("Http connect: %s", SIM::statusToString(cn));
+	wfNet = modem.waitForNetworkRegistration(reg, 9000);
 
-	auto addPara = http.addPara(SIM7600::HttpParameter::URL, PSTR("http://www.google.com"));
-	FormatInvoke("Http add para: %s", SIM::statusToString(addPara));
+	String num = "123456789";
 
-	uint8_t buf1[4096];
-	size_t  outSize;
+	auto status = modem.setSmsFormat(SIM7600::SmsFormat::Text);
+	SerialMon.println(SIM::statusToString(status));
 
-	auto rhRes = http.readHead(buf1, &outSize);
-	FormatInvoke("Http head: %s", SIM::statusToString(rhRes));
 
-	http.disconnect();
-	modem.stopHttpService();
-	modem.powerOff();
+	status = modem.sendSMS(num, "hello world");
+	SerialMon.println(SIM::statusToString(status));
+
+	// modem.powerOff();
 }
 
 void loop()
