@@ -89,13 +89,16 @@ void setup()
 	SerialMon.println(statusToString(wfNet));
 	SerialMon.println((int)reg);
 	
-	String num = "123456789";
-	SerialMon.println(F(("Number: %d", num)));
+	auto num = nullptr;
+	SerialMon.println(F(("Number: %s", num)));
 
 	auto status = modem.setSmsFormat(SmsFormat::Text);
 	SerialMon.println(statusToString(status));
 
-	status = modem.sendSMS(num, "hello world");
+	status = modem.sendSms(num, "hello world");
+	SerialMon.println(statusToString(status));
+
+	status = modem.dispatchCall(num);
 	SerialMon.println(statusToString(status));
 
 	modem.powerOff();
