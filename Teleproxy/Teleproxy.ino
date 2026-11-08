@@ -7,23 +7,26 @@
 // ReSharper disable CppClangTidyModernizeMacroToEnum
 // ReSharper disable CppInconsistentNaming
 
+// ReSharper disable CppClangTidyClangDiagnosticHeaderHygiene
 #include <Arduino.h>
 
 #define SerialAT Serial1
 #define SerialMon Serial
 
+// #include <SIM7600Log.h>
+#define SIM7600_LOG_VERBOSE_ERROR_CODES
+// #define SIM7600_LOG_STREAM SerialMon
 #define SIM7600_LOG_LEVEL 5  // Enable all logs including AT commands
 // #define SIM7600_MODEM_TX_BUFFER_SIZE_B 512
 // #define SIM7600_MODEM_RX_BUFFER_SIZE_B 512
-#define SIM7600_LOG_VERBOSE_ERROR_CODES
-#define SIM7600_LOG_STREAM SerialMon
+#include <SIM7600Modem.h>
 
-#include "SIM7600Modem.h"
-#include "SIM7600HttpClient.h"
+#include "SIM7600Log.h"
 
-namespace SIM = SIM7600;
 
-SIM::Modem modem{&SerialAT};
+using namespace SIM7600;
+
+Modem modem{&SerialAT};
 
 // SIM::HttpClient http{&modem};
 void modemReadyCB()
@@ -31,7 +34,7 @@ void modemReadyCB()
 	SerialMon.println("Event: Modem is ready!");
 }
 
-void networkChangedCB(const bool registered, const SIM7600::RegStatus reg_status)
+void networkChangedCB(const bool registered, const RegStatus reg_status)
 {
 	auto regStr = registered ? "Yes" : "No";
 	auto regInt = static_cast<uint8_t>(reg_status);
@@ -60,16 +63,16 @@ void setup()
 
 	while (true) {
 		SerialMon.println("Initializing modem...");
-		SIM7600::Status status = modem.init();
+		Status status = modem.init();
 
-		if (status == SIM7600::Status::Success) {
+		if (status == Status::Success) {
 			SerialMon.println("Modem initialized successfully!");
 			break;
 		} else {
 			SerialMon.print("Modem initialization failed: ");
-			SerialMon.println((int) SIM7600::statusToString(status));
-			SerialMon.println("Retrying in 5 seconds...");
-			delay(5000);
+			SerialMon.println(statusToString(status));
+			SerialMon.println("Retrying in 1 seconds...");
+			delay(1000);
 		}
 	}
 
@@ -77,21 +80,30 @@ void setup()
 
 	// modem.stopHttpService();
 
-	SIM::RegStatus  reg   = {};
-	SIM7600::Status wfNet = {};
-
-	wfNet = modem.waitForNetworkRegistration(reg, 9000);
+	RegStatus reg   = {};
+	Status    wfNet = {};
+	
+	wfNet           = modem.waitForNetworkRegistration(reg, 20000);
+	SerialMon.print("Network reg: ");
+	SerialMon.println(statusToString(wfNet));
+	SerialMon.println((int)reg);
 
 	String num = "123456789";
 
-	auto status = modem.setSmsFormat(SIM7600::SmsFormat::Text);
-	SerialMon.println(SIM::statusToString(status));
+	auto status = modem.setSmsFormat(SmsFormat::Text);
+	SerialMon.println(statusToString(status));
+	// char buf[64] = {0};
+	// sprintf(buf, "AT+CMGF=%d", static_cast<uint8_t>(SmsFormat::Text));
+	// SIM7600_LOGD("ass", buf);
+
+	// auto status = modem.sendATCmdAndWaitResp(buf,AT_OK,15000);
+	// SerialMon.println(statusToString(status));
 
 
 	status = modem.sendSMS(num, "hello world");
-	SerialMon.println(SIM::statusToString(status));
+	SerialMon.println(statusToString(status));
 
-	// modem.powerOff();
+	modem.powerOff();
 }
 
 void loop()
